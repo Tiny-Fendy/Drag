@@ -1,3 +1,22 @@
+// 工具方法
+let utils = {
+
+	// 遍历dom
+	forEach(domList, fn) {
+		for (let i = 0;i < domList.length;i++) {
+			fn(domList[i], i);
+		}
+	},
+
+	addClass(dom, className) {
+		dom.className += ' ' + className;
+	},
+
+	removeClass(dom, className) {
+		dom.className.replace(className, '');
+	}
+}
+
 class Drag {
 	constructor (options) {
 		this.options = options || {};
@@ -22,25 +41,27 @@ class Drag {
 			let node = document.getElementsByClassName('drag')[0];
 			this.dWrap.appendChild(node);
 			node.className = 'parent';
+			this.setParent(node);
 		}
 
 		this.dWrap.ondragover = (ev) => {
 			ev.preventDefault();
 		}
 
-
-		forEach(this.dParents, (dom, index) => {
+		utils.forEach(this.dParents, dom => {
+			dom.draggable = true;
 			this.setParent(dom);
 		});
 
-		forEach(this.dChildren, (dom, index) => {
+		utils.forEach(this.dChildren, dom => {
+			dom.draggable = true;
 			this.setChild(dom);
-		})
+		});
 	}
 
 	setParent(dom) {
 		dom.ondragstart = (ev) => {
-			ev.target.className = 'parent drag';
+			utils.addClass(ev.target, 'drag');
 		}
 
 		dom.ondrop = (ev) => {
@@ -54,6 +75,8 @@ class Drag {
 
 				// 初始化拖拽事件
 				this.setChild(node);
+			} else {
+				utils.removeClass(node, 'drag');
 			}
 		}
 
@@ -66,15 +89,10 @@ class Drag {
 	setChild(dom) {
 		dom.ondragstart = (ev) => {
 			ev.stopPropagation();
-			ev.target.className = 'child drag';
+			utils.addClass(ev.target, 'drag');
 		}
-	}
-}
-
-// 遍历dom
-function forEach (domList, fn) {
-	for (let i = 0;i < domList.length;i++) {
-		fn(domList[i], i);
+		dom.ondrop = undefined;
+		dom.ondragover = undefined;
 	}
 }
 
