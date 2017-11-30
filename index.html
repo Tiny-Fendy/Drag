@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Drag Demo</title>
+</head>
+
+<style>
+    body {
+        background-color: #f0f0f0;
+    }
+
+    #wrapper {
+        position: relative;
+        width: 640px;
+        margin: 0 auto;
+        padding: 10px;
+        background-color: #fff;
+    }
+
+    .parent {
+        margin-top: 10px;
+        padding: 10px;
+        background-color: #ddd;
+    }
+
+    .parent:first-child {
+        margin-top: 0;
+    }
+
+    .parent:hover {
+        cursor: move;
+    }
+
+    .child {
+        height: 30px;
+        margin-top: 5px;
+        padding-left: 10px;
+        list-style: none;
+        background-color: #fff;
+        line-height: 30px;
+    }
+</style>
+
+<body>
+<div>
+    当第二级节点还有子节点时，不允许被拖拽进另一个二级节点中
+</div>
+
+<div id="wrapper">
+    <div class="parent" draggable="true">
+        1.0
+        <div class="child" draggable="true">1.1</div>
+        <div class="child" draggable="true">1.2</div>
+        <div class="child" draggable="true">1.3</div>
+    </div>
+
+    <div class="parent" draggable="true">
+        2.0
+        <div class="child" draggable="true">2.1</div>
+        <div class="child" draggable="true">2.2</div>
+        <div class="child" draggable="true">2.3</div>
+    </div>
+
+    <div class="parent" draggable="true">
+        3.0
+        <div class="child" draggable="true">3.1</div>
+        <div class="child" draggable="true">3.2</div>
+        <div class="child" draggable="true">3.3</div>
+    </div>
+</div>
+</body>
+
+<script src="index.js"></script>
+<script>
+    new Drag({
+        wrapper: 'wrapper',
+	    parent: 'parent',
+	    child: 'child'
+    });
+</script>
+</html>
