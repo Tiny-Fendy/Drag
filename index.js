@@ -1,4 +1,4 @@
-// 工具方法
+// 工具箱
 let utils = {
 
 	// 遍历dom
@@ -13,7 +13,16 @@ let utils = {
 	},
 
 	removeClass(dom, className) {
-		dom.className.replace(className, '');
+		let reg = new RegExp(`\\s${className}|${className}`, 'g');
+		dom.className = dom.className.replace(reg, '');
+	},
+
+	toggle(dom, className) {
+		if (dom.className.match(className)) {
+			this.removeClass(dom, className);
+		} else {
+			this.addClass(dom, className);
+		}
 	}
 }
 
@@ -36,7 +45,7 @@ class Drag {
 	}
 
 	setDragDrop () {
-		this.dWrap.ondrop = (ev) => {
+		this.dWrap.ondrop = ev => {
 			ev.preventDefault();
 			let node = document.getElementsByClassName('drag')[0];
 			this.dWrap.appendChild(node);
@@ -44,12 +53,13 @@ class Drag {
 			this.setParent(node);
 		}
 
-		this.dWrap.ondragover = (ev) => {
+		this.dWrap.ondragover = ev => {
 			ev.preventDefault();
 		}
 
 		utils.forEach(this.dParents, dom => {
 			dom.draggable = true;
+			// console.log(dom.offsetTop);
 			this.setParent(dom);
 		});
 
@@ -60,11 +70,15 @@ class Drag {
 	}
 
 	setParent(dom) {
-		dom.ondragstart = (ev) => {
+		dom.onclick = () => {
+
+		}
+
+		dom.ondragstart = ev => {
 			utils.addClass(ev.target, 'drag');
 		}
 
-		dom.ondrop = (ev) => {
+		dom.ondrop = ev => {
 			ev.stopPropagation();
 			ev.preventDefault();
 			let node = document.getElementsByClassName('drag')[0];
@@ -80,19 +94,28 @@ class Drag {
 			}
 		}
 
-		dom.ondragover = (ev) => {
+		dom.ondragover = ev => {
+			// console.log(ev.pageY, ev.offsetY);
 			ev.stopPropagation();
 			ev.preventDefault();
+		}
+
+		dom.ondragenter = ev => {
+			console.log('parentEnter', ev);
 		}
 	}
 
 	setChild(dom) {
-		dom.ondragstart = (ev) => {
+		dom.ondragstart = ev => {
 			ev.stopPropagation();
 			utils.addClass(ev.target, 'drag');
 		}
+		dom.onclick = () => {
+
+		}
 		dom.ondrop = undefined;
 		dom.ondragover = undefined;
+		dom.ondragenter = undefined;
 	}
 }
 
