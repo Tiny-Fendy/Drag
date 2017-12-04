@@ -27,7 +27,7 @@
     .parent {
         margin-top: 10px;
         padding: 10px;
-        background-color: #c6d9f1;
+        background-color: #dce8f7;
     }
 
     .parent:first-child {
@@ -46,10 +46,20 @@
         background-color: #fff;
         line-height: 30px;
     }
+
+    .parent,
+    .child {
+        transition: 0.2s;
+    }
+
+    a {
+        text-decoration: none;
+    }
 </style>
 
 <body>
 <div class="warning">
+    <a href="https://github.com/Tiny-Fendy/Drag">https://github.com/Tiny-Fendy/Drag(代码地址)</a><br>
     当第二级节点还有子节点时，不允许被拖拽进另一个二级节点中
 </div>
 
