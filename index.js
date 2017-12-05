@@ -126,9 +126,7 @@ class Drag {
 			ev.stopPropagation();
 		};
 
-		dom.ondragend = ev => {
-
-		};
+		dom.ondragend = ev => {};
 
 		dom.ondragenter = ev => {
 			ev.preventDefault();
