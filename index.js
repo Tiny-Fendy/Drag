@@ -157,6 +157,7 @@ class Drag {
 			}
 
 			let parentNode = target.parentNode;
+
 			let index = $(parentNode.children).indexOf(target);
 
 			utils.appendByIndex(parentNode, this.curNode, index);
