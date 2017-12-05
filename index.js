@@ -1,3 +1,11 @@
+function $(className) {
+	if (typeof className === 'string') {
+		return Array.from(document.getElementsByClassName(className));
+	} else {
+		return Array.from(className);
+	}
+}
+
 // 工具箱
 let utils = {
 	hasClass(dom, className) {
@@ -23,10 +31,11 @@ let utils = {
 
 	appendByIndex(parents, node, index) {
 		if (parents.children.length === index + 1) {
-			// node.remove();
 			parents.appendChild(node);
-		} else {
+		} else if (node.isSameNode(parents.children[index - 1])) {
 			parents.insertBefore(node, parents.children[index + 1]);
+		} else {
+			parents.insertBefore(node, parents.children[index]);
 		}
 	}
 }
@@ -34,9 +43,9 @@ let utils = {
 class Drag {
 	constructor (options) {
 		this.options = options || {};
-		this.instertNode = null; //当前需要被替换的节点
 		this.overNode = null; //当前经过的节点
 		this.curNode = null; //当前被选中的节点
+		this.contain = null; //容器节点
 
 		this.init = this.init.bind(this);
 		this.setDragDrop = this.setDragDrop.bind(this);
@@ -72,8 +81,7 @@ class Drag {
 		};
 
 		this.dWrap.ondragenter = ev => {
-			this.curNode = this.overNode;
-			this.overNode = this.dWrap;
+
 		}
 
 		this.dParents.forEach(dom => {
@@ -94,15 +102,15 @@ class Drag {
 		};
 
 		dom.ondrop = ev => {
-			/*ev.stopPropagation();
+			ev.stopPropagation();
 			ev.preventDefault();
 
-			let node = document.getElementsByClassName('drag')[0];
+			/*let node = document.getElementsByClassName('drag')[0];
 			let hasChild = node.children.length; // 判断是否还有子节点
 
 			if (!hasChild && this.curNode) {
 				node.remove();
-				dom.insertBefore(node, this.instertNode);
+				dom.insertBefore(node, null);
 				node.className = 'child';
 
 				// 初始化拖拽事件
@@ -114,16 +122,21 @@ class Drag {
 		};
 
 		dom.ondragover = ev => {
-			ev.stopPropagation();
 			ev.preventDefault();
+			ev.stopPropagation();
+		};
+
+		dom.ondragend = ev => {
+			console.log('parent');
 		};
 
 		dom.ondragenter = ev => {
+			ev.preventDefault();
 			ev.stopPropagation();
-			if (!ev.target.isSameNode(dom) && this.overNode && !utils.hasClass(this.overNode, 'child')) {
+			/*if (!ev.target.isSameNode(dom) && this.overNode && !utils.hasClass(this.overNode, 'child')) {
 				this.curNode = ev.target;
 			}
-			this.overNode = ev.target;
+			this.overNode = ev.target;*/
 		};
 	}
 
@@ -137,15 +150,24 @@ class Drag {
 
 		dom.ondragenter = ev => {
 			ev.stopPropagation();
+			let target = ev.target;
 
-			if (this.curNode.children.length) {
+			if (this.curNode.children.length || target.isSameNode(this.curNode)) {
 				return false;
 			}
-			let parentNode = dom.parentNode;
-			let index = parentNode.indexOf(dom);
+
+			let parentNode = target.parentNode;
+			let index = $(parentNode.children).indexOf(target);
+
 			utils.appendByIndex(parentNode, this.curNode, index);
-			this.curNode.style.backgroundColor = '';
+			utils.removeClass(this.curNode, 'drag');
 		};
+
+		dom.ondragend = ev => {
+			ev.preventDefault();
+			ev.stopPropagation();
+			this.curNode.style.backgroundColor = '';
+		}
 
 		dom.ondrop = undefined;
 		dom.ondragover = undefined;
