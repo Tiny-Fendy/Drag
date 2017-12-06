@@ -62,25 +62,12 @@ class Drag {
 	}
 
 	setDragDrop () {
-		this.dWrap.ondrop = ev => {
-			ev.preventDefault();
-			ev.stopPropagation();
-			let node = document.getElementsByClassName('drag')[0];
-
-			// 判断落点
-			if (this.overNode && !node.isSameNode(this.curNode)) {
-				this.dWrap.insertBefore(node, this.curNode);
-			}
-			node.style.backgroundColor = '';
-			node.className = 'parent';
-			this.setParent(node);
-		};
-
 		this.dWrap.ondragover = ev => {
 			ev.preventDefault();
 		};
 
 		this.dWrap.ondragenter = ev => {
+			ev.preventDefault();
 
 		}
 
@@ -96,49 +83,49 @@ class Drag {
 	}
 
 	setParent(dom) {
+		dom.className = this.options.parent;
+
 		dom.ondragstart = ev => {
+			ev.stopPropagation();
 			ev.target.style.backgroundColor = '#89c5f1';
 			utils.addClass(ev.target, 'drag');
+			this.curNode = ev.target;
 		};
-
-		dom.ondrop = ev => {
-			ev.stopPropagation();
-			ev.preventDefault();
-
-			/*let node = document.getElementsByClassName('drag')[0];
-			let hasChild = node.children.length; // 判断是否还有子节点
-
-			if (!hasChild && this.curNode) {
-				node.remove();
-				dom.insertBefore(node, null);
-				node.className = 'child';
-
-				// 初始化拖拽事件
-				this.setChild(node);
-			} else {
-				utils.removeClass(node, 'drag');
-			}
-			node.style.backgroundColor = '';*/
-		};
-
-		dom.ondragover = ev => {
-			ev.preventDefault();
-			ev.stopPropagation();
-		};
-
-		dom.ondragend = ev => {};
 
 		dom.ondragenter = ev => {
 			ev.preventDefault();
 			ev.stopPropagation();
-			/*if (!ev.target.isSameNode(dom) && this.overNode && !utils.hasClass(this.overNode, 'child')) {
-				this.curNode = ev.target;
+			let target = ev.target;
+
+			if (target.isSameNode(this.curNode)) {
+				return;
 			}
-			this.overNode = ev.target;*/
+
+			if (this.curNode.children.length) {
+				utils.appendByIndex(this.dWrap, this.curNode, $('parent').indexOf(target));
+			} else {
+
+			}
 		};
+
+		dom.ondragover = ev => {
+			ev.preventDefault();
+		};
+
+		dom.ondragend = ev => {
+			ev.preventDefault();
+			ev.stopPropagation();
+
+			this.curNode.style.backgroundColor = '';
+			if (utils.hasClass(this.curNode.parentNode, 'parent')) {
+				this.setChild(this.curNode);
+			}
+		}
 	}
 
 	setChild(dom) {
+		dom.className = this.options.child;
+
 		dom.ondragstart = ev => {
 			ev.stopPropagation();
 			ev.target.style.backgroundColor = '#89c5f1';
@@ -164,10 +151,13 @@ class Drag {
 		dom.ondragend = ev => {
 			ev.preventDefault();
 			ev.stopPropagation();
+
 			this.curNode.style.backgroundColor = '';
+			if (!utils.hasClass(this.curNode.parentNode, 'parent')) {
+				this.setParent(this.curNode);
+			}
 		}
 
-		dom.ondrop = undefined;
 		dom.ondragover = undefined;
 	}
 }
