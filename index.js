@@ -45,7 +45,6 @@ class Drag {
 		this.options = options || {};
 		this.overNode = null; //当前经过的节点
 		this.curNode = null; //当前被选中的节点
-		this.contain = null; //容器节点
 
 		this.init = this.init.bind(this);
 		this.setDragDrop = this.setDragDrop.bind(this);
@@ -69,6 +68,10 @@ class Drag {
 		this.dWrap.ondragenter = ev => {
 			ev.preventDefault();
 
+			if (utils.hasClass(this.curNode, 'child')) {
+				let index = $(this.dWrap.children).indexOf(this.overNode);
+				utils.appendByIndex(this.dWrap, this.curNode, index);
+			}
 		}
 
 		this.dParents.forEach(dom => {
@@ -95,16 +98,26 @@ class Drag {
 		dom.ondragenter = ev => {
 			ev.preventDefault();
 			ev.stopPropagation();
+
 			let target = ev.target;
 
 			if (target.isSameNode(this.curNode)) {
 				return;
 			}
-
 			if (this.curNode.children.length) {
 				utils.appendByIndex(this.dWrap, this.curNode, $('parent').indexOf(target));
-			} else {
+			} else if (this.switch) {
+				this.overNode = ev.target;
+				/*this.interval = setInterval(() => {
+					this.time += 100;
+					if (this.time > 1500) {
+						let index = $('parent').indexOf(target);
 
+						utils.appendByIndex(this.dWrap, this.curNode, index);
+						clearInterval(this.interval);
+						this.switch = false;
+					}
+				}, 100);*/
 			}
 		};
 
@@ -134,6 +147,7 @@ class Drag {
 		};
 
 		dom.ondragenter = ev => {
+			ev.preventDefault();
 			ev.stopPropagation();
 			let target = ev.target;
 
