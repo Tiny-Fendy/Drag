@@ -68,8 +68,9 @@ class Drag {
 		this.dWrap.ondragenter = ev => {
 			ev.preventDefault();
 
-			if (utils.hasClass(this.curNode, 'child')) {
+			if (this.curNode.children) {
 				let index = $(this.dWrap.children).indexOf(this.overNode);
+				console.log(index);
 				utils.appendByIndex(this.dWrap, this.curNode, index);
 			}
 		}
@@ -101,13 +102,14 @@ class Drag {
 
 			let target = ev.target;
 
+			this.overNode = target;
 			if (target.isSameNode(this.curNode)) {
 				return;
 			}
 			if (this.curNode.children.length) {
 				utils.appendByIndex(this.dWrap, this.curNode, $('parent').indexOf(target));
-			} else if (this.switch) {
-				this.overNode = ev.target;
+			} else if (!target.children.length) {
+				target.appendChild(this.curNode);
 				/*this.interval = setInterval(() => {
 					this.time += 100;
 					if (this.time > 1500) {
@@ -123,6 +125,10 @@ class Drag {
 
 		dom.ondragover = ev => {
 			ev.preventDefault();
+/*
+			if (!this.overNode || !this.overNode.isSameNode(ev.target)) {
+				this.overNode = ev.target;
+			}*/
 		};
 
 		dom.ondragend = ev => {
