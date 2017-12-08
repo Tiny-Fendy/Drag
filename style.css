@@ -42,15 +42,31 @@ body {
 
 .parent,
 .child {
+    overflow: hidden;
     transition: 0.2s;
 }
 
+.parent > span {
+    height: 20px;
+    line-height: 20px;
+}
+
 span {
+    margin-right: 5px;
     font-size: 30px;
     font-weight: 900;
     float: left;
+    cursor: pointer;
 }
 
 a {
     text-decoration: none;
+}
+
+.parent-hidden {
+    height: 14px;
+}
+
+.child-hidden {
+    height: 20px;
 }
