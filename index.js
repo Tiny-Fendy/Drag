@@ -67,11 +67,8 @@ class Drag {
 
 		this.dWrap.ondragenter = ev => {
 			ev.preventDefault();
-
-			if (this.curNode.getElementsByClassName('child').length) {
-				let index = $(this.dWrap.children).indexOf(this.overNode);
-				utils.appendByIndex(this.dWrap, this.curNode, index);
-			}
+			let index = $(this.dWrap.children).indexOf(this.overNode);
+			utils.appendByIndex(this.dWrap, this.curNode, index);
 		}
 
 		this.dParents.forEach(dom => {
@@ -121,7 +118,8 @@ class Drag {
 			ev.stopPropagation();
 
 			this.curNode.style.backgroundColor = '';
-			if (utils.hasClass(this.curNode.parentNode, 'parent')) {
+			utils.removeClass(this.curNode, 'drag');
+			if (utils.hasClass(this.curNode.parentNode.parentNode, 'parent')) {
 				this.setChild(this.curNode);
 			}
 		}
@@ -150,7 +148,6 @@ class Drag {
 			let index = $(parentNode.getElementsByClassName('child')).indexOf(target);
 
 			utils.appendByIndex(parentNode, this.curNode, index);
-			utils.removeClass(this.curNode, 'drag');
 		};
 
 		dom.ondragend = ev => {
@@ -158,7 +155,8 @@ class Drag {
 			ev.stopPropagation();
 
 			this.curNode.style.backgroundColor = '';
-			if (!utils.hasClass(this.curNode.parentNode, 'parent')) {
+			utils.removeClass(this.curNode, 'drag');
+			if (!utils.hasClass(this.curNode.parentNode.parentNode, 'parent')) {
 				this.setParent(this.curNode);
 			}
 		}
