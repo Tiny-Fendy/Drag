@@ -31,7 +31,6 @@ body {
 }
 
 .child {
-    height: 40px;
     margin-top: 10px;
     padding-left: 10px;
     list-style: none;
@@ -51,6 +50,10 @@ body {
     line-height: 20px;
 }
 
+.child .children {
+    height: 15px;
+}
+
 span {
     margin-right: 5px;
     font-size: 30px;
@@ -60,13 +63,12 @@ span {
 }
 
 a {
-    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 5px;
+    color: #0a96ef;
 }
 
-.parent-hidden {
-    height: 14px;
-}
-
-.child-hidden {
-    height: 20px;
+.hidden {
+    height: 0;
+    overflow: hidden;
 }

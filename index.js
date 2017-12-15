@@ -1,8 +1,8 @@
-function $(className) {
-	if (typeof className === 'string') {
-		return Array.from(document.getElementsByClassName(className));
+function $(selector) {
+	if (typeof selector === 'string') {
+		return Array.from(document.querySelectorAll(selector));
 	} else {
-		return Array.from(className);
+		return Array.from(selector);
 	}
 }
 
@@ -54,29 +54,30 @@ class Drag {
 	}
 
 	init() {
-		this.dWrap = document.getElementById(this.options.wrapper);
-		this.dParents = Array.from(document.getElementsByClassName(this.options.parent));
-		this.dChildren = Array.from(document.getElementsByClassName(this.options.child));
+		this.$wrap = $('#' + this.options.wrapper)[0];
+		this.$parents = $('.' + this.options.parent);
+		this.$children = $('.' + this.options.child);
 		this.setDragDrop();
 	}
 
 	setDragDrop () {
-		this.dWrap.ondragover = ev => {
+		this.$wrap.ondragover = ev => {
 			ev.preventDefault();
 		};
 
-		this.dWrap.ondragenter = ev => {
+		this.$wrap.ondragenter = ev => {
 			ev.preventDefault();
-			let index = $(this.dWrap.children).indexOf(this.overNode);
-			utils.appendByIndex(this.dWrap, this.curNode, index);
+
+			let index = $(this.$wrap.children).indexOf(this.overNode);
+			utils.appendByIndex(this.$wrap, this.curNode, index);
 		}
 
-		this.dParents.forEach(dom => {
+		this.$parents.forEach(dom => {
 			dom.draggable = true;
 			this.setParent(dom);
 		});
 
-		this.dChildren.forEach(dom => {
+		this.$children.forEach(dom => {
 			dom.draggable = true;
 			this.setChild(dom);
 		});
@@ -84,7 +85,6 @@ class Drag {
 
 	setParent(dom) {
 		dom.className = this.options.parent;
-
 		dom.ondragstart = ev => {
 			ev.stopPropagation();
 			ev.target.style.backgroundColor = '#89c5f1';
@@ -103,9 +103,9 @@ class Drag {
 				return;
 			}
 			if (this.curNode.getElementsByClassName('child').length) {
-				utils.appendByIndex(this.dWrap, this.curNode, $('parent').indexOf(target));
+				utils.appendByIndex(this.$wrap, this.curNode, $('.parent').indexOf(target));
 			} else if (!target.getElementsByClassName('child').length) {
-				target.appendChild(this.curNode);
+				dom.querySelector('.children').appendChild(this.curNode);
 			}
 		};
 
@@ -138,15 +138,12 @@ class Drag {
 		dom.ondragenter = ev => {
 			ev.preventDefault();
 			ev.stopPropagation();
-			let target = ev.target;
 
-			if (this.curNode.getElementsByClassName('child').length || target.isSameNode(this.curNode)) {
+			if (this.curNode.getElementsByClassName('child').length || dom.isSameNode(this.curNode)) {
 				return false;
 			}
-
-			let parentNode = target.parentNode;
-			let index = $(parentNode.getElementsByClassName('child')).indexOf(target);
-
+			let parentNode = dom.parentNode;
+			let index = $(parentNode.getElementsByClassName('child')).indexOf(dom);
 			utils.appendByIndex(parentNode, this.curNode, index);
 		};
 
