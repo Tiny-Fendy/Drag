@@ -40,25 +40,27 @@ body {
 }
 
 .parent,
-.child {
-    overflow: hidden;
+.child,
+.children {
     transition: 0.2s;
 }
 
-.parent > span {
-    height: 20px;
-    line-height: 20px;
+.parent > div {
+    height: 0;
+    overflow: hidden;
+}
+
+.children {
+    height: 0;
 }
 
 .child .children {
-    height: 15px;
+    /*height: 40px;*/
 }
 
-span {
-    margin-right: 5px;
-    font-size: 30px;
-    font-weight: 900;
-    float: left;
+i {
+    margin-right: 3px;
+    font-size: 20px;
     cursor: pointer;
 }
 
@@ -66,9 +68,4 @@ a {
     display: inline-block;
     margin-bottom: 5px;
     color: #0a96ef;
-}
-
-.hidden {
-    height: 0;
-    overflow: hidden;
 }
