@@ -212,7 +212,6 @@ class Drag {
 	closeNode(dom, type) {
 		let wrap = dom.querySelector('.children');
 
-		utils.removeClass(wrap, 'active');
 		dom.querySelector('i').className = 'fa fa-plus';
 		wrap.style.height = 0;
 		this.activeNode[type] = null;
@@ -223,7 +222,6 @@ class Drag {
 
 		wrap.style.height = height + 'px';
 		dom.querySelector('i').className = 'fa fa-minus';
-		utils.addClass(wrap, 'active');
 		this.activeNode[type] = dom;
 	}
 }
