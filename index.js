@@ -69,6 +69,10 @@ class Drag {
 			let index = $(this.$wrap.children).indexOf(this.overNode);
 			utils.appendByIndex(this.$wrap, this.curNode, index);
 			this.resetHeight();
+
+			if (this.activeNode[1] && this.curNode.isSameNode(this.activeNode[1])) {
+				this.closeNode(this.curNode, 1);
+			}
 		}
 
 		this.$parents.forEach(dom => {
@@ -108,7 +112,7 @@ class Drag {
 			this.overNode = ev.target;
 
 			let target = ev.target;
-			if (target.isSameNode(this.curNode)) {
+			if (dom.isSameNode(this.curNode)) {
 				return;
 			}
 			if (this.curNode.getElementsByClassName('child').length) {
