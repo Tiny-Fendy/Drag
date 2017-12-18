@@ -47,6 +47,7 @@ class Drag {
 		this.toggleChild = this.toggleChild.bind(this);
 		this.closeNode = this.closeNode.bind(this);
 		this.openNode = this.openNode.bind(this);
+		this.resetHeight = this.resetHeight.bind(this);
 		this.init();
 	}
 
@@ -67,6 +68,7 @@ class Drag {
 
 			let index = $(this.$wrap.children).indexOf(this.overNode);
 			utils.appendByIndex(this.$wrap, this.curNode, index);
+			this.resetHeight();
 		}
 
 		this.$parents.forEach(dom => {
@@ -105,7 +107,7 @@ class Drag {
 
 			this.overNode = ev.target;
 
-			/*let target = ev.target;
+			let target = ev.target;
 			if (target.isSameNode(this.curNode)) {
 				return;
 			}
@@ -113,7 +115,7 @@ class Drag {
 				utils.appendByIndex(this.$wrap, this.curNode, $('.parent').indexOf(target));
 			} else if (!target.getElementsByClassName('child').length) {
 				dom.querySelector('.children').appendChild(this.curNode);
-			}*/
+			}
 		};
 
 		dom.ondragover = ev => {
@@ -157,6 +159,7 @@ class Drag {
 			let parentNode = dom.parentNode;
 			let index = $(parentNode.getElementsByClassName('child')).indexOf(dom);
 			utils.appendByIndex(parentNode, this.curNode, index);
+			this.resetHeight();
 		};
 
 		dom.ondragend = ev => {
@@ -181,11 +184,11 @@ class Drag {
 		if (parent) {
 			this.closeNode(parent, 0);
 			if (!curDom.isSameNode(parent)) {
-				this.openNode(curDom, 0, length * 35);
+				this.openNode(curDom, 0, length * 46);
 				if (child) this.closeNode(child, 1);
 			}
 		} else {
-			this.openNode(curDom, 0, length * 35);
+			this.openNode(curDom, 0, length * 46);
 		}
 	}
 
@@ -198,13 +201,13 @@ class Drag {
 
 			// 自身折叠则清理activeNode，同时还原容器高度
 			if (curDom.isSameNode(child)) {
-				parent.style.height = `${parent.clientHeight - 40}px`;
+				parent.style.height = `${parent.clientHeight - 50}px`;
 			} else {
-				this.openNode(curDom, 1, 40);
+				this.openNode(curDom, 1, 50);
 			}
 		} else {
-			parent.style.height = `${parent.clientHeight + 40}px`;
-			this.openNode(curDom, 1, 40);
+			parent.style.height = `${parent.clientHeight + 50}px`;
+			this.openNode(curDom, 1, 50);
 		}
 	}
 
@@ -223,6 +226,14 @@ class Drag {
 		wrap.style.height = height + 'px';
 		dom.querySelector('i').className = 'fa fa-minus';
 		this.activeNode[type] = dom;
+	}
+
+	resetHeight() {
+		if (this.activeNode[0]) {
+			let children = this.activeNode[0].querySelector('.children');
+			let length = children.querySelectorAll('.children').length;
+			children.style.height = `${length * 46}px`;
+		}
 	}
 }
 

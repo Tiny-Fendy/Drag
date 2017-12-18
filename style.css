@@ -22,6 +22,10 @@ body {
     background-color: #dce8f7;
 }
 
+.parent .children .parent {
+    margin-top: 10px;
+}
+
 .parent:first-child {
     margin-top: 0;
 }
@@ -35,7 +39,7 @@ body {
     padding-left: 10px;
     list-style: none;
     background-color: #fff;
-    line-height: 25px;
+    line-height: 36px;
     font-size: 14px;
 }
 
@@ -52,10 +56,6 @@ body {
 
 .children {
     height: 0;
-}
-
-.child .children {
-    /*height: 40px;*/
 }
 
 i {
