@@ -103,9 +103,9 @@ class Drag {
 			ev.preventDefault();
 			ev.stopPropagation();
 
-			let target = ev.target;
+			this.overNode = ev.target;
 
-			this.overNode = target;
+			/*let target = ev.target;
 			if (target.isSameNode(this.curNode)) {
 				return;
 			}
@@ -113,7 +113,7 @@ class Drag {
 				utils.appendByIndex(this.$wrap, this.curNode, $('.parent').indexOf(target));
 			} else if (!target.getElementsByClassName('child').length) {
 				dom.querySelector('.children').appendChild(this.curNode);
-			}
+			}*/
 		};
 
 		dom.ondragover = ev => {
